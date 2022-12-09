@@ -1,42 +1,63 @@
 package com.demo.main;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
-import com.demo.factorymethod.demo.audioexporter.AACAudioExporter;
 import com.demo.factorymethod.demo.audioexporter.AudioExporter;
-import com.demo.factorymethod.demo.audioexporter.WAVAudioExporter;
-import com.demo.factorymethod.demo.videoexporter.H264BPVideoExporter;
-import com.demo.factorymethod.demo.videoexporter.H264Hi422PVideoExporter;
-import com.demo.factorymethod.demo.videoexporter.LossLessVideoExporter;
+import com.demo.factorymethod.demo.exporter.factory.ExporterFactory;
+import com.demo.factorymethod.demo.exporter.factory.FastExporter;
+import com.demo.factorymethod.demo.exporter.factory.HighQualityExporter;
+import com.demo.factorymethod.demo.exporter.factory.MasterQualityExporter;
 import com.demo.factorymethod.demo.videoexporter.VideoExporter;
 
 /*
- * This version of main has lots of coupling and less cohesion.
- * It is having lots of responsibility. So next we will get rid of high coupling and less cohesion
+ * This version of main has less coupling and high cohesion compared to previous version.
+ *
  */
 public class TestVideoAudoExample {
-	public static void main(String[] args) {
-		VideoExporter vExporter;
-		AudioExporter aExporter;
-		try (Scanner sc = new Scanner(System.in)) {
-			System.out.println("Enter desired output quality (low, high, master) :");
-			String quality = sc.nextLine();
-			if(quality=="low") {
-				 vExporter = new H264BPVideoExporter();
-				 aExporter = new AACAudioExporter();
-			}else if(quality=="high") {
-				 vExporter = new H264Hi422PVideoExporter();
-				 aExporter = new AACAudioExporter();
-			}else {
-				vExporter = new LossLessVideoExporter();
-				 aExporter = new WAVAudioExporter();
-			}
-		}  
-		vExporter.prepareExport(vExporter, "Sample data");
-		vExporter.doExport(vExporter, "abc/path");
+	
+	/*
+	 * This function got added in order to reduce coupling and increase cohesion
+	 * Most of the time we use map to return a specific factory in factory method design pattern
+	 * Responsibility of this function is to construct an exporter factory based on the user's preferences
+	 */
+	public static ExporterFactory getSpecificFactory() {
+		Map<String, ExporterFactory> factories = new HashMap<>();
+		factories.put("low", new FastExporter());
+		factories.put("high", new HighQualityExporter());
+		factories.put("master", new MasterQualityExporter());
 		
-		aExporter.prepareExport(aExporter, "Sample data");
-		aExporter.doExport(aExporter, "abc/path");
+		// Read input from user and return specific factory
+		System.out.println("Enter desired output quality (low, high, master) :");
+		try (Scanner sc = new Scanner(System.in)) {
+			String quality = sc.nextLine();
+			if("low".equals(quality) || "high".equals(quality) || "master".equals(quality) ) {
+				return factories.get(quality);
+			}else {
+				return null;
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param args
+	 * Main dosen't need to know anything specific about the expoerter.Heence less coupling.
+	 * Its responsibility is just to get a factory.
+	 */
+	public static void main(String[] args) {
+		
+		ExporterFactory factory = getSpecificFactory();
+		
+		VideoExporter vExpoerter = factory.getVideoExporter();
+		AudioExporter aExporter = factory.getAudioExporter();
+		
+		vExpoerter.prepareExport(vExpoerter, "test/Vdata");
+		vExpoerter.doExport(vExpoerter, "test/Vpath");
+		
+		aExporter.prepareExport(aExporter, "test/Adata");
+		aExporter.doExport(aExporter, "test/Apath");
 		
 	}
 }
