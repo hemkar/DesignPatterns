@@ -10,6 +10,10 @@ import com.demo.factorymethod.demo.videoexporter.H264Hi422PVideoExporter;
 import com.demo.factorymethod.demo.videoexporter.LossLessVideoExporter;
 import com.demo.factorymethod.demo.videoexporter.VideoExporter;
 
+/*
+ * This version of main has lots of coupling and less cohesion.
+ * It is having lots of responsibility. So next we will get rid of high coupling and less cohesion
+ */
 public class TestVideoAudoExample {
 	public static void main(String[] args) {
 		VideoExporter vExporter;
