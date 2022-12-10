@@ -43,18 +43,18 @@ public class TestVideoAudoExample {
 	/**
 	 * 
 	 * @param args
-	 * Main dosen't need to know anything specific about the expoerter.Heence less coupling.
+	 * Main doesn't need to know anything specific about the expoerter.Heence less coupling.
 	 * Its responsibility is just to get a factory.
 	 */
 	public static void main(String[] args) {
 		
 		ExporterFactory factory = getSpecificFactory();
 		
-		VideoExporter vExpoerter = factory.getVideoExporter();
+		VideoExporter vExporter = factory.getVideoExporter();
 		AudioExporter aExporter = factory.getAudioExporter();
-		
-		vExpoerter.prepareExport(vExpoerter, "test/Vdata");
-		vExpoerter.doExport(vExpoerter, "test/Vpath");
+
+		vExporter.prepareExport(vExporter, "test/Vdata");
+		vExporter.doExport(vExporter, "test/Vpath");
 		
 		aExporter.prepareExport(aExporter, "test/Adata");
 		aExporter.doExport(aExporter, "test/Apath");
