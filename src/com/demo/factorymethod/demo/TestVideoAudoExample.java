@@ -1,4 +1,4 @@
-package com.demo.main;
+package com.demo.factorymethod.demo;
 
 import java.util.HashMap;
 import java.util.Map;
